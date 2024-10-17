@@ -1,3 +1,21 @@
 {
-  "title": "Hello World!"
+  "errors": {
+    "fields": {
+      "required": "This field is required"
+    }
+  },
+  "common": {
+    "copyright": "AR Crafter - Tool ©{{year}} Created by Kanstantsin Hrytsuk"
+  },
+  "home": {
+    "title": "Generate AR models using images"
+  },
+  "formUpload": {
+    "fields": {
+      "images": "Images: ",
+      "dragAndDrop": "Click or drag file to this area to upload",
+      "format": "Format",
+      "submit": "Generate"
+    }
+  }
 }
