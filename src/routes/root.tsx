@@ -1,14 +1,17 @@
 import { Layout } from 'antd';
 import Footer from 'features/Footer';
 import Header from 'features/Header';
+import { Outlet } from 'react-router-dom';
 
-import Root from './pages';
+const { Content } = Layout;
 
-function App() {
+function Root() {
   return (
     <Layout style={styles.wrapper}>
       <Header />
-      <Root />
+      <Content style={{ padding: '50px' }}>
+        <Outlet />
+      </Content>
       <Footer />
     </Layout>
   );
@@ -20,4 +23,4 @@ const styles = {
   },
 };
 
-export default App;
+export default Root;

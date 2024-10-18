@@ -5,7 +5,7 @@ import UploadForm from 'src/features/UploadForm';
 const { Content } = Layout;
 const { Title } = Typography;
 
-function Root() {
+function UploadPage() {
   const { t } = useTranslation();
 
   return (
@@ -16,4 +16,4 @@ function Root() {
   );
 }
 
-export default Root;
+export default UploadPage;
