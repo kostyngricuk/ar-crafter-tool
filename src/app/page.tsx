@@ -17,6 +17,7 @@ import {
 } from "@/components/ui/dialog";
 import * as THREE from "three";
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 
 export default function Home() {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
@@ -87,46 +88,47 @@ export default function Home() {
       const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
       directionalLight.position.set(0, 1, 1);
       scene.add(directionalLight);
-  
+
       const loader = new GLTFLoader();
       loader.load(model.modelUrl, (gltf) => {
         scene.add(gltf.scene);
-  
+
         // Calculate bounding box of the model
         const box = new THREE.Box3().setFromObject(gltf.scene);
         const size = box.getSize(new THREE.Vector3()).length();
         const center = box.getCenter(new THREE.Vector3());
-  
+
         // Reposition the model to the center
         gltf.scene.position.x += (gltf.scene.position.x - center.x);
         gltf.scene.position.y += (gltf.scene.position.y - center.y);
         gltf.scene.position.z += (gltf.scene.position.z - center.z);
-  
+
         // Set the camera position based on the model size
         camera.position.set(0, size / 2, size);
-  
+
         // Add OrbitControls
-        // const controls = new OrbitControls(camera, renderer.domElement);
-        // controls.target.set(0, size / 2, 0);
-        // controls.update();
-  
+        const controls = new OrbitControls(camera, renderer.domElement);
+        controls.target.set(0, size / 2, 0);
+        controls.update();
+
         const animate = () => {
           requestAnimationFrame(animate);
+          controls.update(); // Update the controls in the animation loop
           renderer.render(scene, camera);
         };
-  
+
         animate();
       }, undefined, (error) => {
         console.error('An error happened while loading the model', error);
       });
-  
+
       const handleResize = () => {
         camera.aspect = container.offsetWidth / container.offsetHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(container.offsetWidth, container.offsetHeight);
         renderer.render(scene, camera);
       };
-  
+
       window.addEventListener('resize', handleResize);
       return () => {
         window.removeEventListener('resize', handleResize);
@@ -216,7 +218,7 @@ export default function Home() {
             <CardTitle>Model Preview</CardTitle>
           </CardHeader>
           <CardContent>
-          <div ref={modelContainerRef} style={{ width: '100%', height: '300px' }} />
+            <div ref={modelContainerRef} style={{ width: '100%', height: '300px' }} />
             {model ? (
               <div className="relative">
                 <Button
