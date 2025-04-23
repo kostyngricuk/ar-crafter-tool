@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useState } from "react";
@@ -17,8 +16,8 @@ export default function Home() {
     if (!event.target.files) return;
 
     const files = Array.from(event.target.files).slice(0, 3); // Limit to 3 files
-    const imageUrls = files.map((file) => URL.createObjectURL(file));
-    setImageUrls(imageUrls);
+    const newImageUrls = files.map((file) => URL.createObjectURL(file));
+    setImageUrls(newImageUrls);
   };
 
   const handleGenerateModel = async () => {
@@ -76,6 +75,14 @@ export default function Home() {
                     : "Upload 2-3 Images"}
                 </span>
               </label>
+              {imageUrls.map((imageUrl, index) => (
+                <img
+                  key={index}
+                  src={imageUrl}
+                  alt={`Uploaded Image ${index + 1}`}
+                  className="mt-2 max-w-full h-auto rounded-md"
+                />
+              ))}
             </div>
             <div className="flex space-x-2">
               <Button
