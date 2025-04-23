@@ -257,6 +257,10 @@ export default function Home() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+      {/* Copyright Text */}
+      <p className="text-center text-sm text-muted-foreground mt-4">
+        © {new Date().getFullYear()} AR Crafter. All rights reserved.
+      </p>
     </div>
   );
 }
