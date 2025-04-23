@@ -4,7 +4,7 @@ import { useState } from "react";
 import { generateModel, Model } from "@/services/model-generation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
-import { ImageIcon, Download, Loader2 } from "lucide-react";
+import { ImageIcon, Download, Loader2, X } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
@@ -60,6 +60,12 @@ export default function Home() {
     setOpen(true);
   };
 
+  const removeImage = (indexToRemove: number) => {
+    setImageUrls((prevImageUrls) =>
+      prevImageUrls.filter((_, index) => index !== indexToRemove)
+    );
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">AR Crafter</h1>
@@ -96,13 +102,20 @@ export default function Home() {
                   <div
                     key={index}
                     className="relative w-24 h-24 rounded-md overflow-hidden cursor-pointer"
-                    onClick={() => openImageDialog(imageUrl)}
                   >
                     <img
                       src={imageUrl}
                       alt={`Uploaded Image ${index + 1}`}
                       className="absolute inset-0 object-cover w-full h-full"
+                      onClick={() => openImageDialog(imageUrl)}
                     />
+                    <Button
+                      onClick={() => removeImage(index)}
+                      className="absolute top-1 right-1 bg-destructive text-destructive-foreground hover:bg-destructive/90 p-1"
+                      size="icon"
+                    >
+                      <X className="h-4 w-4" />
+                    </Button>
                   </div>
                 ))}
               </div>
