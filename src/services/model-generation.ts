@@ -17,6 +17,7 @@ export interface Model {
  */
 export async function generateModel(imageUrls: string[]): Promise<Model> {
   // TODO: Implement this by calling an API.
+  console.log(imageUrls);
   await new Promise((resolve) => setTimeout(resolve, 2000));
   return {
     modelUrl:

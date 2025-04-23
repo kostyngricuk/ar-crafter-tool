@@ -6,4 +6,17 @@ export default defineConfig({
   plugins: [
     react()
   ],
+  resolve: {
+    alias: {
+      '@': '/src',
+      '@components': '/src/components',
+      '@features': '/src/features',
+      '@hooks': '/src/hooks',
+      '@utils': '/src/utils',
+      '@assets': '/src/assets',
+      '@lib': '/src/lib',
+      '@services': '/src/services',
+    },
+    extensions: ['.ts', '.tsx', '.js', '.jsx', '.json'],
+  }
 })
