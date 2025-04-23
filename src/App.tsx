@@ -1,11 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { generateModel, Model } from "@/services/model-generation";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
+import { generateModel, Model } from "./services/model-generation";
+import { Button } from "./components/ui/button";
+import { Input } from "./components/ui/input";
 import { ImageIcon, Download, Loader2, X } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "./components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -13,13 +13,13 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-} from "@/components/ui/dialog";
+} from "./components/ui/dialog";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls, useGLTF } from "@react-three/drei";
 
 function ModelViewer({ url }: { url: string }) {
   const { scene } = useGLTF(url);
-  
+
   return (
     <>
       <ambientLight intensity={0.5} />
@@ -30,7 +30,7 @@ function ModelViewer({ url }: { url: string }) {
   );
 }
 
-export default function Home() {
+export default function App() {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [model, setModel] = useState<Model | null>(null);
   const [isLoading, setIsLoading] = useState(false);
@@ -213,4 +213,3 @@ export default function Home() {
     </div>
   );
 }
-
