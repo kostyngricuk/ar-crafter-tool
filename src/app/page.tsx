@@ -213,27 +213,25 @@ export default function Home() {
         </Card>
 
         {/* Model Preview */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Model Preview</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div ref={modelContainerRef} style={{ width: '100%', height: '300px' }} />
-            {model ? (
-              <div className="relative">
-                <Button
-                  onClick={handleDownloadModel}
-                  className="absolute bottom-2 right-2 bg-success text-success-foreground hover:bg-success/90"
-                >
-                  <Download className="mr-2 h-4 w-4" />
-                  Download
-                </Button>
-              </div>
-            ) : (
-              <p>No model generated yet.</p>
-            )}
-          </CardContent>
-        </Card>
+        {model && (
+            <Card>
+              <CardHeader>
+                <CardTitle>Model Preview</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <div ref={modelContainerRef} style={{ width: '100%', height: '300px' }} />
+                <div className="relative">
+                  <Button
+                    onClick={handleDownloadModel}
+                    className="absolute bottom-2 right-2 bg-success text-success-foreground hover:bg-success/90"
+                  >
+                    <Download className="mr-2 h-4 w-4" />
+                    Download
+                  </Button>
+                </div>
+              </CardContent>
+            </Card>
+          )}
       </div>
 
       {/* Image Dialog */}
@@ -264,4 +262,3 @@ export default function Home() {
     </div>
   );
 }
-
