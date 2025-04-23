@@ -143,95 +143,97 @@ export default function Home() {
       <h1 className="text-2xl font-bold mb-4 text-center">AR Crafter</h1>
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Image Upload Form */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Upload Images</CardTitle>
-          </CardHeader>
-          <CardContent>
-            <div className="mb-4">
-              <Input
-                type="file"
-                multiple
-                accept="image/*"
-                onChange={handleImageUpload}
-                disabled={isLoading}
-                id="imageUpload"
-                className="hidden"
-              />
-              <label
-                htmlFor="imageUpload"
-                className="flex items-center justify-center w-full h-12 bg-secondary text-secondary-foreground rounded-md cursor-pointer hover:bg-secondary/80 disabled:opacity-50 disabled:cursor-not-allowed"
-              >
-                <ImageIcon className="mr-2 h-4 w-4" />
-                <span>
-                  {imageUrls.length > 0
-                    ? `Uploaded ${imageUrls.length} images`
-                    : "Upload 2-3 Images"}
-                </span>
-              </label>
-              <div className="flex mt-2 space-x-2">
-                {imageUrls.map((imageUrl, index) => (
-                  <div
-                    key={index}
-                    className="relative w-24 h-24 rounded-md overflow-hidden cursor-pointer"
-                  >
-                    <img
-                      src={imageUrl}
-                      alt={`Uploaded Image ${index + 1}`}
-                      className="absolute inset-0 object-cover w-full h-full"
-                      onClick={() => openImageDialog(imageUrl)}
-                    />
-                    <Button
-                      onClick={() => removeImage(index)}
-                      className="absolute top-1 right-1 p-1 hover:bg-destructive/20 rounded-sm text-destructive hover:text-destructive-foreground/90"
-                      size="icon"
-                      variant="ghost"
+        <div className={model ? "" : "md:col-span-2 flex justify-center items-center"}>
+          <Card>
+            <CardHeader>
+              <CardTitle>Upload Images</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="mb-4">
+                <Input
+                  type="file"
+                  multiple
+                  accept="image/*"
+                  onChange={handleImageUpload}
+                  disabled={isLoading}
+                  id="imageUpload"
+                  className="hidden"
+                />
+                <label
+                  htmlFor="imageUpload"
+                  className="flex items-center justify-center w-full h-12 bg-secondary text-secondary-foreground rounded-md cursor-pointer hover:bg-secondary/80 disabled:opacity-50 disabled:cursor-not-allowed"
+                >
+                  <ImageIcon className="mr-2 h-4 w-4" />
+                  <span>
+                    {imageUrls.length > 0
+                      ? `Uploaded ${imageUrls.length} images`
+                      : "Upload 2-3 Images"}
+                  </span>
+                </label>
+                <div className="flex mt-2 space-x-2">
+                  {imageUrls.map((imageUrl, index) => (
+                    <div
+                      key={index}
+                      className="relative w-24 h-24 rounded-md overflow-hidden cursor-pointer"
                     >
-                      <X className="h-3 w-3" />
-                    </Button>
-                  </div>
-                ))}
+                      <img
+                        src={imageUrl}
+                        alt={`Uploaded Image ${index + 1}`}
+                        className="absolute inset-0 object-cover w-full h-full"
+                        onClick={() => openImageDialog(imageUrl)}
+                      />
+                      <Button
+                        onClick={() => removeImage(index)}
+                        className="absolute top-1 right-1 p-1 hover:bg-destructive/20 rounded-sm text-destructive hover:text-destructive-foreground/90"
+                        size="icon"
+                        variant="ghost"
+                      >
+                        <X className="h-3 w-3" />
+                      </Button>
+                    </div>
+                  ))}
+                </div>
               </div>
-            </div>
-            <div className="flex space-x-2">
-              <Button
-                onClick={handleGenerateModel}
-                disabled={imageUrls.length < 2 || isLoading}
-                className="bg-primary text-primary-foreground hover:bg-primary/90"
-              >
-                {isLoading ? (
-                  <>
-                    <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                    Generating...
-                  </>
-                ) : (
-                  "Generate"
-                )}
-              </Button>
-            </div>
-          </CardContent>
-        </Card>
+              <div className="flex space-x-2">
+                <Button
+                  onClick={handleGenerateModel}
+                  disabled={imageUrls.length < 2 || isLoading}
+                  className="bg-primary text-primary-foreground hover:bg-primary/90"
+                >
+                  {isLoading ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Generating...
+                    </>
+                  ) : (
+                    "Generate"
+                  )}
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
 
         {/* Model Preview */}
         {model && (
-            <Card>
-              <CardHeader>
-                <CardTitle>Model Preview</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div ref={modelContainerRef} style={{ width: '100%', height: '300px' }} />
-                <div className="relative">
-                  <Button
-                    onClick={handleDownloadModel}
-                    className="absolute bottom-2 right-2 bg-success text-success-foreground hover:bg-success/90"
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    Download
-                  </Button>
-                </div>
-              </CardContent>
-            </Card>
-          )}
+          <Card>
+            <CardHeader>
+              <CardTitle>Model Preview</CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div ref={modelContainerRef} style={{ width: '100%', height: '300px' }} />
+              <div className="relative">
+                <Button
+                  onClick={handleDownloadModel}
+                  className="absolute bottom-2 right-2 bg-success text-success-foreground hover:bg-success/90"
+                >
+                  <Download className="mr-2 h-4 w-4" />
+                  Download
+                </Button>
+              </div>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       {/* Image Dialog */}
