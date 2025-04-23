@@ -111,10 +111,11 @@ export default function Home() {
                     />
                     <Button
                       onClick={() => removeImage(index)}
-                      className="absolute top-1 right-1 bg-destructive text-destructive-foreground hover:bg-destructive/90 p-1"
+                      className="absolute top-1 right-1 p-1 hover:bg-destructive/20 rounded-sm text-destructive hover:text-destructive-foreground/90"
                       size="icon"
+                      variant="ghost"
                     >
-                      <X className="h-4 w-4" />
+                      <X className="h-3 w-3" />
                     </Button>
                   </div>
                 ))}
