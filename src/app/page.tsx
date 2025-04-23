@@ -144,7 +144,7 @@ export default function Home() {
       <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
         {/* Image Upload Form */}
         <div className={model ? "" : "md:col-span-2 flex justify-center items-center"}>
-          <Card>
+          <Card className={model ? "" : "w-full"}>
             <CardHeader>
               <CardTitle>Upload Images</CardTitle>
             </CardHeader>
@@ -264,3 +264,4 @@ export default function Home() {
     </div>
   );
 }
+
