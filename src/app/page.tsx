@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 import { generateModel, Model } from "@/services/model-generation";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -13,11 +13,22 @@ import {
   DialogFooter,
   DialogHeader,
   DialogTitle,
-  DialogTrigger,
 } from "@/components/ui/dialog";
-import * as THREE from "three";
-import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
-import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
+import { Canvas } from "@react-three/fiber";
+import { OrbitControls, useGLTF } from "@react-three/drei";
+
+function ModelViewer({ url }: { url: string }) {
+  const { scene } = useGLTF(url);
+  
+  return (
+    <>
+      <ambientLight intensity={0.5} />
+      <directionalLight position={[0, 1, 1]} intensity={0.5} />
+      <primitive object={scene} />
+      <OrbitControls />
+    </>
+  );
+}
 
 export default function Home() {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
@@ -25,7 +36,6 @@ export default function Home() {
   const [isLoading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [selectedImage, setSelectedImage] = useState<string | null>(null);
-  const modelContainerRef = useRef<HTMLDivElement>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
@@ -69,74 +79,6 @@ export default function Home() {
       prevImageUrls.filter((_, index) => index !== indexToRemove)
     );
   };
-
-  useEffect(() => {
-    if (model && modelContainerRef.current) {
-      const container = modelContainerRef.current;
-      const scene = new THREE.Scene();
-      const camera = new THREE.PerspectiveCamera(75, container.offsetWidth / container.offsetHeight, 0.1, 1000);
-      const renderer = new THREE.WebGLRenderer({ alpha: true }); // Enable transparency
-      renderer.setSize(container.offsetWidth, container.offsetHeight);
-      container.innerHTML = ''; // Clear existing content
-      container.appendChild(renderer.domElement);
-
-      // Add ambient light
-      const ambientLight = new THREE.AmbientLight(0xffffff, 0.5);
-      scene.add(ambientLight);
-
-      // Add directional light
-      const directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-      directionalLight.position.set(0, 1, 1);
-      scene.add(directionalLight);
-
-      const loader = new GLTFLoader();
-      loader.load(model.modelUrl, (gltf) => {
-        scene.add(gltf.scene);
-
-        // Calculate bounding box of the model
-        const box = new THREE.Box3().setFromObject(gltf.scene);
-        const size = box.getSize(new THREE.Vector3()).length();
-        const center = box.getCenter(new THREE.Vector3());
-
-        // Reposition the model to the center
-        gltf.scene.position.x += (gltf.scene.position.x - center.x);
-        gltf.scene.position.y += (gltf.scene.position.y - center.y);
-        gltf.scene.position.z += (gltf.scene.position.z - center.z);
-
-        // Set the camera position based on the model size
-        camera.position.set(0, size / 2, size);
-
-        // Add OrbitControls
-        const controls = new OrbitControls(camera, renderer.domElement);
-        controls.target.set(0, size / 2, 0);
-        controls.update();
-
-        const animate = () => {
-          requestAnimationFrame(animate);
-          controls.update(); // Update the controls in the animation loop
-          renderer.render(scene, camera);
-        };
-
-        animate();
-      }, undefined, (error) => {
-        console.error('An error happened while loading the model', error);
-      });
-
-      const handleResize = () => {
-        camera.aspect = container.offsetWidth / container.offsetHeight;
-        camera.updateProjectionMatrix();
-        renderer.setSize(container.offsetWidth, container.offsetHeight);
-        renderer.render(scene, camera);
-      };
-
-      window.addEventListener('resize', handleResize);
-      return () => {
-        window.removeEventListener('resize', handleResize);
-        // Clean up resources when the component unmounts
-        renderer.dispose();
-      };
-    }
-  }, [model]);
 
   return (
     <div className="container mx-auto p-4">
@@ -221,7 +163,14 @@ export default function Home() {
               <CardTitle>Model Preview</CardTitle>
             </CardHeader>
             <CardContent>
-              <div ref={modelContainerRef} style={{ width: '100%', height: '300px' }} />
+              <div style={{ width: '100%', height: '300px' }}>
+                <Canvas
+                  camera={{ position: [0, 0, 5], fov: 75 }}
+                  style={{ background: 'transparent' }}
+                >
+                  <ModelViewer url={model.modelUrl} />
+                </Canvas>
+              </div>
               <div className="relative">
                 <Button
                   onClick={handleDownloadModel}
