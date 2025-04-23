@@ -6,11 +6,22 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { ImageIcon, Download, Loader2 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogFooter,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function Home() {
   const [imageUrls, setImageUrls] = useState<string[]>([]);
   const [model, setModel] = useState<Model | null>(null);
   const [isLoading, setIsLoading] = useState(false);
+  const [open, setOpen] = useState(false);
+  const [selectedImage, setSelectedImage] = useState<string | null>(null);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
@@ -44,6 +55,11 @@ export default function Home() {
     }
   };
 
+  const openImageDialog = (imageUrl: string) => {
+    setSelectedImage(imageUrl);
+    setOpen(true);
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h1 className="text-2xl font-bold mb-4">AR Crafter</h1>
@@ -75,14 +91,21 @@ export default function Home() {
                     : "Upload 2-3 Images"}
                 </span>
               </label>
-              {imageUrls.map((imageUrl, index) => (
-                <img
-                  key={index}
-                  src={imageUrl}
-                  alt={`Uploaded Image ${index + 1}`}
-                  className="mt-2 max-w-full h-auto rounded-md"
-                />
-              ))}
+              <div className="flex mt-2 space-x-2">
+                {imageUrls.map((imageUrl, index) => (
+                  <div
+                    key={index}
+                    className="relative w-24 h-24 rounded-md overflow-hidden cursor-pointer"
+                    onClick={() => openImageDialog(imageUrl)}
+                  >
+                    <img
+                      src={imageUrl}
+                      alt={`Uploaded Image ${index + 1}`}
+                      className="absolute inset-0 object-cover w-full h-full"
+                    />
+                  </div>
+                ))}
+              </div>
             </div>
             <div className="flex space-x-2">
               <Button
@@ -133,6 +156,28 @@ export default function Home() {
           </CardContent>
         </Card>
       </div>
+
+      {/* Image Dialog */}
+      <Dialog open={open} onOpenChange={setOpen}>
+        <DialogContent className="max-w-lg">
+          <DialogHeader>
+            <DialogTitle>Image Preview</DialogTitle>
+            <DialogDescription>Full size preview of uploaded image.</DialogDescription>
+          </DialogHeader>
+          {selectedImage && (
+            <img
+              src={selectedImage}
+              alt="Full Size Preview"
+              className="w-full rounded-md"
+            />
+          )}
+          <DialogFooter>
+            <Button type="button" onClick={() => setOpen(false)}>
+              Close
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
