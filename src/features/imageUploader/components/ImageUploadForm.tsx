@@ -4,17 +4,17 @@ import { Card, CardContent, CardHeader, CardTitle } from "@components/ui/card";
 import { ImageIcon, Loader2, X } from "lucide-react";
 
 interface ImageUploadFormProps {
-  imageUrls: string[];
+  imageFiles: File[];
   isLoading: boolean;
   onUpload: (event: React.ChangeEvent<HTMLInputElement>) => void;
   onRemove: (index: number) => void;
-  onImageClick: (imageUrl: string) => void;
+  onImageClick: (file: File) => void;
   onGenerate: () => void;
   className?: string;
 }
 
 export function ImageUploadForm({
-  imageUrls,
+  imageFiles,
   isLoading,
   onUpload,
   onRemove,
@@ -22,6 +22,8 @@ export function ImageUploadForm({
   onGenerate,
   className
 }: ImageUploadFormProps) {
+  const isDisabledGenerate = imageFiles ? imageFiles.length < 2 || isLoading : true;
+
   return (
     <Card className={className}>
       <CardHeader>
@@ -44,22 +46,23 @@ export function ImageUploadForm({
           >
             <ImageIcon className="mr-2 h-4 w-4" />
             <span>
-              {imageUrls.length > 0
-                ? `Uploaded ${imageUrls.length} images`
+              {imageFiles && imageFiles.length > 0
+                ? `Uploaded ${imageFiles.length} images`
                 : "Upload 2-3 Images"}
             </span>
           </label>
           <div className="flex mt-2 space-x-2">
-            {imageUrls.map((imageUrl, index) => (
+            {imageFiles?.map((file, index) => (
               <div
-                key={index}
+                key={file.name}
                 className="relative w-24 h-24 rounded-md overflow-hidden cursor-pointer"
               >
+                {/* biome-ignore lint/a11y/useKeyWithClickEvents: <explanation> */}
                 <img
-                  src={imageUrl}
-                  alt={`Uploaded Image ${index + 1}`}
+                  src={URL.createObjectURL(file)}
+                  alt={`Uploaded file: ${file.name}`}
                   className="absolute inset-0 object-cover w-full h-full"
-                  onClick={() => onImageClick(imageUrl)}
+                  onClick={() => onImageClick(file)}
                 />
                 <Button
                   onClick={() => onRemove(index)}
@@ -76,7 +79,7 @@ export function ImageUploadForm({
         <div className="flex space-x-2">
           <Button
             onClick={onGenerate}
-            disabled={imageUrls.length < 2 || isLoading}
+            disabled={isDisabledGenerate}
             className="bg-primary text-primary-foreground hover:bg-primary/90"
           >
             {isLoading ? (

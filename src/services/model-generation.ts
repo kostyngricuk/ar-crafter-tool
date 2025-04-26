@@ -12,15 +12,28 @@ export interface Model {
 /**
  * Asynchronously generates a 3D model from a list of image URLs.
  *
- * @param imageUrls The URLs of the images to use for generating the 3D model.
+ * @param imageFiles The list of image files to be used for generating the model.
  * @returns A promise that resolves to a Model object containing the URL of the generated 3D model.
  */
-export async function generateModel(imageUrls: string[]): Promise<Model> {
-  // TODO: Implement this by calling an API.
-  console.log(imageUrls);
-  await new Promise((resolve) => setTimeout(resolve, 2000));
+export async function generateModel(imageFiles: File[]): Promise<Model> {
+  const formData = new FormData();
+  for (const file of imageFiles) {
+    formData.append("images", file);
+  }
+
+  const response = await fetch("http://localhost:3000/model/generate", {
+    method: "POST",
+    body: formData,
+  });
+  if (!response.ok) {
+    throw new Error("Failed to generate model");
+  }
+  
+  const arrayBuffer = await response.arrayBuffer();
+  const blob = new Blob([arrayBuffer]);
+  const modelUrl = URL.createObjectURL(blob);
+
   return {
-    modelUrl:
-      "https://modelviewer.dev/shared-assets/models/RobotExpressive.glb",
+    modelUrl,
   };
 }

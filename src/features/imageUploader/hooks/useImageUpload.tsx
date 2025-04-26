@@ -1,30 +1,28 @@
 import { useState } from 'react';
 
 export function useImageUpload() {
-  const [imageUrls, setImageUrls] = useState<string[]>([]);
-  const [selectedImage, setSelectedImage] = useState<string | null>(null);
+  const [imageFiles, setImageFiles] = useState<File[]>([]);
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
   const [dialogOpen, setDialogOpen] = useState(false);
 
   const handleImageUpload = (event: React.ChangeEvent<HTMLInputElement>) => {
     if (!event.target.files) return;
-    const files = Array.from(event.target.files).slice(0, 3);
-    const newImageUrls = files.map((file) => URL.createObjectURL(file));
-    setImageUrls(newImageUrls);
+    setImageFiles(Array.from(event.target.files));
   };
 
   const removeImage = (indexToRemove: number) => {
-    setImageUrls((prevImageUrls) =>
-      prevImageUrls.filter((_, index) => index !== indexToRemove)
-    );
+    if (imageFiles.length === 0) return;
+    const updatedFiles = Array.from(imageFiles).filter((_, index) => index !== indexToRemove);
+    setImageFiles(updatedFiles.length > 0 ? updatedFiles : []);
   };
 
-  const openImageDialog = (imageUrl: string) => {
-    setSelectedImage(imageUrl);
+  const openImageDialog = (file: File) => {
+    setSelectedImage(file);
     setDialogOpen(true);
   };
 
   return {
-    imageUrls,
+    imageFiles,
     selectedImage,
     dialogOpen,
     setDialogOpen,

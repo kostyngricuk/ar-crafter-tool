@@ -1,14 +1,15 @@
 import { useState } from 'react';
+// biome-ignore lint/style/useImportType: <explanation>
 import { Model, generateModel } from '@services/model-generation';
 
 export function useModel() {
   const [model, setModel] = useState<Model | null>(null);
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleGenerateModel = async (imageUrls: string[]) => {
+  const handleGenerateModel = async (imageFiles: File[]) => {
     setIsLoading(true);
     try {
-      const generatedModel = await generateModel(imageUrls);
+      const generatedModel = await generateModel(imageFiles);
       setModel(generatedModel);
     } catch (error) {
       console.error("Error generating model:", error);
